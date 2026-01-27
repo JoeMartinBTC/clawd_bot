@@ -1,6 +1,10 @@
 services:
   moltbot-gateway:
     image: ${CLAWDBOT_IMAGE:-moltbot:local}
+    build:
+      context: .
+      args:
+        CLAWDBOT_DOCKER_APT_PACKAGES: ""
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -8,27 +12,33 @@ services:
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     volumes:
       - ${CLAWDBOT_CONFIG_DIR}:/home/node/.clawdbot
       - ${CLAWDBOT_WORKSPACE_DIR}:/home/node/clawd
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "${CLAWDBOT_GATEWAY_PORT:-18789}:18789"
-      - "${CLAWDBOT_BRIDGE_PORT:-18790}:18790"
+      - "127.0.0.1:${CLAWDBOT_GATEWAY_PORT:-18789}:18789"
+      - "127.0.0.1:${CLAWDBOT_BRIDGE_PORT:-18790}:18790"
     init: true
     restart: unless-stopped
+    user: "root"
     command:
       [
         "node",
         "dist/index.js",
         "gateway",
         "--bind",
-        "${CLAWDBOT_GATEWAY_BIND:-lan}",
+        "lan",
         "--port",
-        "${CLAWDBOT_GATEWAY_PORT:-18789}"
+        "18789"
       ]
 
   moltbot-cli:
     image: ${CLAWDBOT_IMAGE:-moltbot:local}
+    build:
+      context: .
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -36,10 +46,14 @@ services:
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     volumes:
       - ${CLAWDBOT_CONFIG_DIR}:/home/node/.clawdbot
       - ${CLAWDBOT_WORKSPACE_DIR}:/home/node/clawd
+      - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
     tty: true
     init: true
+    user: "root"
     entrypoint: ["node", "dist/index.js"]
