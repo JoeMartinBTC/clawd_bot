@@ -4,6 +4,13 @@ FROM node:22-bookworm
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
+# Install latest Docker CLI (static binary) for compatibility with new host daemons
+ARG DOCKER_VERSION=27.5.1
+RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz -o docker.tgz \
+    && tar xzvf docker.tgz \
+    && mv docker/docker /usr/local/bin/ \
+    && rm -rf docker docker.tgz
+
 RUN corepack enable
 
 WORKDIR /app
@@ -21,7 +28,7 @@ COPY ui/package.json ./ui/package.json
 COPY patches ./patches
 COPY scripts ./scripts
 
-RUN pnpm install --frozen-lockfile
+RUN npm install -g pnpm@10.23.0 && pnpm install --frozen-lockfile
 
 COPY . .
 RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build
@@ -37,4 +44,4 @@ ENV NODE_ENV=production
 # This reduces the attack surface by preventing container escape via root privileges
 USER node
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/index.js", "gateway"]
