@@ -29,7 +29,7 @@ COPY ui/package.json ./ui/package.json
 COPY patches ./patches
 COPY scripts ./scripts
 
-RUN pnpm install --frozen-lockfile
+RUN npm install -g pnpm@10.23.0 && pnpm install --frozen-lockfile
 
 COPY . .
 RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build
@@ -43,4 +43,4 @@ ENV NODE_ENV=production
 # and the GID on the host might not match the container's node user.
 USER root
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/index.js", "gateway"]
