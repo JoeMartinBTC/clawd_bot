@@ -1,0 +1,89 @@
+{
+  "logging": {
+    "redactSensitive": "tools"
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-5"
+      },
+      "workspace": "/home/node/clawd",
+      "compaction": {
+        "mode": "default"
+      },
+      "sandbox": {
+        "mode": "all",
+        "workspaceAccess": "ro",
+        "scope": "session",
+        "docker": {
+          "network": "none"
+        }
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "tools": {
+    "elevated": {
+      "enabled": true,
+      "allowFrom": {
+        "telegram": [
+          "308801199"
+        ],
+        "webchat": [
+          "*"
+        ],
+        "exec-event": [
+          "*"
+        ]
+      }
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "channels": {
+    "telegram": {
+      "dmPolicy": "pairing",
+      "groups": {
+        "*": {
+          "requireMention": true
+        }
+      },
+      "allowFrom": [
+        "308801199"
+      ],
+      "groupPolicy": "allowlist",
+      "streamMode": "partial"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "e296b921b18515dfbeee8ec2631475f3c0cf51f0d935fb7d7751f4d5197531e9"
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.1.26",
+    "lastTouchedAt": "2026-01-27T21:39:14.035Z"
+  }
+}
