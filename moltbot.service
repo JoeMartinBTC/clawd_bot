@@ -1,0 +1,17 @@
+[Unit]
+Description=Moltbot Gateway Daemon
+After=network.target tailscaled.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/moltbot
+ExecStart=/usr/bin/node /root/moltbot/dist/index.js gateway --tailscale serve --allow-unconfigured
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=moltbot
+
+[Install]
+WantedBy=multi-user.target

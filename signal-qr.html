@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Signal Link QR Code</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #3a76f0;
+            font-family: sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            color: #3a76f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Link with Signal</h1>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=sgnl%3A%2F%2Flinkdevice%3Fuuid%3D0lKNxww9IrrzJuCJGqK7zg%253D%253D%26pub_key%3DBRtSzY0pyIvMXjnKaXwsXsb7f8Xs%252B7kNY%252BtrtCgT4u8T"
+            alt="QR Code" />
+        <p>Open <b>Signal</b> > <b>Settings</b> > <b>Linked Devices</b> > <b>+ (Add)</b></p>
+        <p>Scan this code to link Clawdbot.</p>
+    </div>
+</body>
+
+</html>
