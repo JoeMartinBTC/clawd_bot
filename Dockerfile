@@ -4,8 +4,12 @@ FROM node:22-bookworm
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
-# Install latest Docker CLI (static binary)
-RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-27.5.1.tgz | \
+# Install latest Docker CLI (static binary) - Arch agnostic
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then DOCKER_ARCH="x86_64"; \
+    elif [ "$ARCH" = "aarch64" ]; then DOCKER_ARCH="aarch64"; \
+    else echo "Unsupported architecture: $ARCH" && exit 1; fi && \
+    curl -fsSL "https://download.docker.com/linux/static/stable/${DOCKER_ARCH}/docker-27.5.1.tgz" | \
     tar -xz -C /tmp && \
     mv /tmp/docker/docker /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker && \
