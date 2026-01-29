@@ -1,0 +1,81 @@
+{
+    "gateway": {
+        "mode": "local",
+        "bind": "lan",
+        "port": 18789,
+        "trustedProxies": [
+            "127.0.0.1",
+            "::1",
+            "100.0.0.0/8",
+            "0.0.0.0/0",
+            "::/0"
+        ],
+        "auth": {
+            "allowTailscale": true
+        }
+    },
+    "channels": {
+        "telegram": {
+            "dmPolicy": "pairing",
+            "groups": {
+                "*": {
+                    "requireMention": true
+                }
+            },
+            "allowFrom": [
+                "308801199"
+            ],
+            "groupPolicy": "allowlist",
+            "streamMode": "partial"
+        }
+    },
+    "messages": {
+        "ackReactionScope": "group-mentions"
+    },
+    "plugins": {
+        "entries": {
+            "telegram": {
+                "enabled": true
+            }
+        }
+    },
+    "meta": {
+        "lastTouchedVersion": "2026.1.26",
+        "lastTouchedAt": "2026-01-27T21:39:14.035Z"
+    },
+    "agents": {
+        "defaults": {
+            "model": {
+                "primary": "anthropic/claude-sonnet-4-5",
+                "fallbacks": [
+                    "anthropic/claude-3-opus-20240229"
+                ]
+            },
+            "heartbeat": {
+                "every": "10m"
+            },
+            "verboseDefault": "full"
+        }
+    },
+    "models": {
+        "providers": {
+            "anthropic": {
+                "api": "anthropic-messages",
+                "baseUrl": "https://api.anthropic.com",
+                "models": [
+                    {
+                        "id": "claude-sonnet-4-5",
+                        "name": "Claude Sonnet 4.5 (Special)",
+                        "contextWindow": 200000,
+                        "maxTokens": 8192,
+                        "input": [
+                            "text",
+                            "image"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "skills": {}
+}
