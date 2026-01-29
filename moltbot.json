@@ -31,7 +31,7 @@
             "google": {
                 "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
                 "api": "google-generative-ai",
-                "apiKey": "AIzaSyD7Im7NEmUgj1_d-wteY_TTyU3iZCKqSi8",
+                "apiKey": "${GOOGLE_API_KEY}",
                 "models": [
                     {
                         "id": "gemini-2.0-flash",
