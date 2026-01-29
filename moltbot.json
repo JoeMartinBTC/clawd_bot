@@ -1,18 +1,74 @@
 {
-    "gateway": {
-        "mode": "local",
-        "bind": "lan",
-        "port": 18789,
-        "trustedProxies": [
-            "127.0.0.1",
-            "::1",
-            "100.0.0.0/8",
-            "0.0.0.0/0",
-            "::/0"
-        ],
-        "auth": {
-            "allowTailscale": true
+    "meta": {
+        "lastTouchedVersion": "2026.1.26",
+        "lastTouchedAt": "2026-01-29T15:52:34.154Z"
+    },
+    "models": {
+        "providers": {
+            "anthropic": {
+                "baseUrl": "https://api.anthropic.com",
+                "api": "anthropic-messages",
+                "models": [
+                    {
+                        "id": "claude-sonnet-4-5",
+                        "name": "Claude Sonnet 4.5 (Special)",
+                        "reasoning": false,
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "cost": {
+                            "input": 0,
+                            "output": 0,
+                            "cacheRead": 0,
+                            "cacheWrite": 0
+                        },
+                        "contextWindow": 200000,
+                        "maxTokens": 8192
+                    }
+                ]
+            }
         }
+    },
+    "agents": {
+        "defaults": {
+            "model": {
+                "primary": "anthropic/claude-sonnet-4-5",
+                "fallbacks": [
+                    "anthropic/claude-3-opus-20240229"
+                ]
+            },
+            "models": {
+                "anthropic/claude-sonnet-4-5": {
+                    "alias": "sonnet",
+                    "params": {
+                        "cacheControlTtl": "1h"
+                    }
+                }
+            },
+            "contextPruning": {
+                "mode": "cache-ttl",
+                "ttl": "1h"
+            },
+            "compaction": {
+                "mode": "safeguard"
+            },
+            "verboseDefault": "full",
+            "heartbeat": {
+                "every": "10m"
+            },
+            "maxConcurrent": 4,
+            "subagents": {
+                "maxConcurrent": 8
+            }
+        }
+    },
+    "messages": {
+        "ackReactionScope": "group-mentions"
+    },
+    "commands": {
+        "native": "auto",
+        "nativeSkills": "auto"
     },
     "channels": {
         "telegram": {
@@ -29,53 +85,68 @@
             "streamMode": "partial"
         }
     },
-    "messages": {
-        "ackReactionScope": "group-mentions"
+    "gateway": {
+        "port": 18789,
+        "mode": "local",
+        "bind": "loopback",
+        "auth": {
+            "allowTailscale": true
+        },
+        "trustedProxies": [
+            "127.0.0.1",
+            "::1",
+            "100.0.0.0/8",
+            "0.0.0.0/0",
+            "::/0"
+        ]
+    },
+    "skills": {
+        "entries": {}
     },
     "plugins": {
+        "load": {
+            "paths": [
+                "/home/node/.clawdbot/skills",
+                "/home/node/clawd/extensions"
+            ]
+        },
+        "slots": {},
         "entries": {
             "telegram": {
                 "enabled": true
+            },
+            "clawdbot-supermemory": {
+                "enabled": true,
+                "config": {
+                    "apiKey": "sm_7NwhbzrPmbG9Ld1CviT5JN_brrDxguhykqsHENzqHOqgQBpCcMCrMycypXsQcrgRakWwDOgyxYQLzIMZGitlgBU"
+                }
+            },
+            "memory-core": {
+                "enabled": true
+            },
+            "memory-lancedb": {
+                "enabled": true
+            },
+            "gmail": {
+                "enabled": true,
+                "config": {
+                    "account": "joemartinbtc21@gmail.com",
+                    "appPassword": "dimy lblv xmsp pdlo",
+                    "whitelist": [
+                        "jg@storymaster.de"
+                    ],
+                    "autoApprove": false
+                }
+            }
+        },
+        "installs": {
+            "clawdbot-supermemory": {
+                "source": "npm",
+                "spec": "@supermemory/clawdbot-supermemory",
+                "installPath": "/home/node/.clawdbot/extensions/clawdbot-supermemory",
+                "version": "1.0.0",
+                "installedAt": "2026-01-29T12:00:00.000Z"
             }
         }
-    },
-    "meta": {
-        "lastTouchedVersion": "2026.1.26",
-        "lastTouchedAt": "2026-01-27T21:39:14.035Z"
-    },
-    "agents": {
-        "defaults": {
-            "model": {
-                "primary": "anthropic/claude-sonnet-4-5",
-                "fallbacks": [
-                    "anthropic/claude-3-opus-20240229"
-                ]
-            },
-            "heartbeat": {
-                "every": "10m"
-            },
-            "verboseDefault": "full"
-        }
-    },
-    "models": {
-        "providers": {
-            "anthropic": {
-                "api": "anthropic-messages",
-                "baseUrl": "https://api.anthropic.com",
-                "models": [
-                    {
-                        "id": "claude-sonnet-4-5",
-                        "name": "Claude Sonnet 4.5 (Special)",
-                        "contextWindow": 200000,
-                        "maxTokens": 8192,
-                        "input": [
-                            "text",
-                            "image"
-                        ]
-                    }
-                ]
-            }
-        }
-    },
-    "skills": {}
+    }
 }
