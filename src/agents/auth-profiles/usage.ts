@@ -68,11 +68,15 @@ export async function markAuthProfileUsed(params: {
 }
 
 export function calculateAuthProfileCooldownMs(errorCount: number): number {
+  return 0; // NUCLEAR FIX: Disable all internal backoff logic per USER instruction (2026-01-29).
+  // Original logic overridden to prevent "Logic Lock" / "Zombie Cooldowns".
+  /*
   const normalized = Math.max(1, errorCount);
   return Math.min(
     60 * 60 * 1000, // 1 hour max
     60 * 1000 * 5 ** Math.min(normalized - 1, 3),
   );
+  */
 }
 
 type ResolvedAuthCooldownConfig = {
