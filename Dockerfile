@@ -4,23 +4,24 @@ FROM node:22-bookworm
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
-# Install latest Docker CLI (static binary) for compatibility with new host daemons
-ARG DOCKER_VERSION=27.5.1
-RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz -o docker.tgz \
-    && tar xzvf docker.tgz \
-    && mv docker/docker /usr/local/bin/ \
-    && rm -rf docker docker.tgz
+# Install latest Docker CLI (static binary)
+RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-27.5.1.tgz | \
+    tar -xz -C /tmp && \
+    mv /tmp/docker/docker /usr/local/bin/docker && \
+    chmod +x /usr/local/bin/docker && \
+    rm -rf /tmp/docker
 
 RUN corepack enable
 
 WORKDIR /app
 
+# Optional extra packages
 ARG CLAWDBOT_DOCKER_APT_PACKAGES=""
 RUN if [ -n "$CLAWDBOT_DOCKER_APT_PACKAGES" ]; then \
       apt-get update && \
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $CLAWDBOT_DOCKER_APT_PACKAGES && \
       apt-get clean && \
-      rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
+      rm -rf /var/lib/apt/lists/*; \
     fi
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
@@ -32,16 +33,14 @@ RUN npm install -g pnpm@10.23.0 && pnpm install --frozen-lockfile
 
 COPY . .
 RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build
-# Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
 ENV CLAWDBOT_PREFER_PNPM=1
 RUN pnpm ui:install
 RUN pnpm ui:build
 
 ENV NODE_ENV=production
 
-# Security hardening: Run as non-root user
-# The node:22-bookworm image includes a 'node' user (uid 1000)
-# This reduces the attack surface by preventing container escape via root privileges
-USER node
+# Security: Still running as root because we need to access docker.sock 
+# and the GID on the host might not match the container's node user.
+USER root
 
 CMD ["node", "dist/index.js", "gateway"]
