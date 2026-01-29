@@ -33,7 +33,7 @@ COPY ui/package.json ./ui/package.json
 COPY patches ./patches
 COPY scripts ./scripts
 
-RUN npm install -g pnpm@10.23.0 && pnpm install
+RUN pnpm install
 
 COPY . .
 RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build
