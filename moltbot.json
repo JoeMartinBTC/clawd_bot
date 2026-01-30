@@ -130,8 +130,7 @@
     "plugins": {
         "load": {
             "paths": [
-                "/home/node/.clawdbot/skills",
-                "/home/node/clawd/extensions"
+                "/home/node/.clawdbot/skills"
             ]
         },
         "slots": {},
