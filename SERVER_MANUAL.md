@@ -51,36 +51,39 @@ The system uses a hybrid configuration layout. **Do not modify blindly.**
     docker restart moltbot-moltbot-gateway-1
     ```
 
-## 4. Emergency Procedures (Panic Protocol)
+## 6. Detailed Configuration Rules (Updated)
 
-**Symptom: Bot is offline / Restart Loop**
-1.  **Check Logs:**
-    ```bash
-    docker logs --tail 50 -f moltbot-moltbot-gateway-1
-    ```
-2.  **Common Errors:**
-    *   `Config invalid ... plugin not found`: You have a plugin in `moltbot.json` that is not installed/enabled. Remove the block.
-    *   `EADDRINUSE`: Port conflict. Check for rogue containers.
-3.  **Nuclear Reset (Safe):**
-    If multiple containers are running or state is inconsistent:
-    ```bash
-    # 1. Stop everything
-    docker stop $(docker ps -a -q)
-    
-    # 2. Cleanup
-    docker system prune -f
-    
-    # 3. Start fresh (Config persistiert in /root/.clawdbot)
-    cd /root/moltbot
-    docker compose up -d --force-recreate
-    ```
+> [!IMPORTANT]
+> **The Triad of Configuration:**
+> To add a new AI Provider (e.g., Kimi/Moonshot), you must touch **THREE** places. Missing one results in failure.
 
-## 5. Verification
-After any change, verify the container sees the new values:
-```bash
-docker exec moltbot-moltbot-gateway-1 env | grep KEY_NAME
-```
-If this command returns empty or old values, the `docker compose` mapping is missing.
+1.  **The Secret Source (`.env`):**
+    *   Stores the actual API Key.
+    *   Example: `MOONSHOT_API_KEY=sk-123...`
+2.  **The Delivery Channel (`docker-compose.yml`):**
+    *   **CRITICAL:** Docker does NOT see the `.env` file automatically inside the container. You must EXPLICITLY map it.
+    *   You must add: `MOONSHOT_API_KEY: ${MOONSHOT_API_KEY}` under `services.moltbot-gateway.environment`.
+3.  **The Application Logic (`moltbot.json`):**
+    *   Defines usage (BaseURL, Models).
+    *   Usage: `"apiKey": "MOONSHOT_API_KEY"` (or explicit key string).
+
+### The "Allowlist" Trap
+If `agents.defaults.models` is present in `moltbot.json` (which it is), the bot enters **STRICT MODE**.
+*   **Result:** Only models explicitly listed in this object are allowed.
+*   **Symptom:** "Model not in allowlist".
+*   **Fix:** You must verify the exact model ID (e.g., `moonshot/kimi-k2-0905-preview`) and add an empty object `{}` or alias config to `agents.defaults.models`.
+
+## 7. Kimi (Moonshot AI) Integration
+**Provider:** `moonshot`
+**Model:** `kimi-k2-0905-preview`
+
+### Setup Checklist
+- [ ] Get Key from [Moonshot Platform](https://platform.moonshot.cn).
+- [ ] Add `MOONSHOT_API_KEY=sk-...` to `/root/moltbot/.env`.
+- [ ] Add `MOONSHOT_API_KEY: ${MOONSHOT_API_KEY}` to `/root/moltbot/docker-compose.yml` (environment section).
+- [ ] Add provider config to `moltbot.json` (`models.providers.moonshot`).
+- [ ] **Allowlist:** Add `"moonshot/kimi-k2-0905-preview": {}` to `agents.defaults.models` in `moltbot.json`.
+- [ ] **Restart:** `cd /root/moltbot && docker compose up -d` (Recreates container to load ENV).
 
 ---
 **Maintainer Note:**
