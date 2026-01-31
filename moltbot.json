@@ -1,7 +1,7 @@
 {
     "meta": {
-        "lastTouchedVersion": "2026.1.26",
-        "lastTouchedAt": "2026-01-29T15:52:34.154Z"
+        "lastTouchedVersion": "2026.1.30",
+        "lastTouchedAt": "2026-01-31T22:00:00.000Z"
     },
     "models": {
         "providers": {
@@ -34,8 +34,8 @@
                 "apiKey": "${GOOGLE_API_KEY}",
                 "models": [
                     {
-                        "id": "gemini-2.0-flash",
-                        "name": "Gemini 2.0 Flash",
+                        "id": "gemini-1.5-flash",
+                        "name": "Gemini 1.5 Flash",
                         "reasoning": false,
                         "input": [
                             "text",
@@ -51,13 +51,26 @@
                         "maxTokens": 8192
                     }
                 ]
+            },
+            "moonshot": {
+                "baseUrl": "https://api.moonshot.ai/v1",
+                "api": "openai-completions",
+                "apiKey": "${MOONSHOT_API_KEY}",
+                "models": [
+                    {
+                        "id": "kimi-k2-0905-preview",
+                        "name": "Kimi K2 (Moonshot)",
+                        "contextWindow": 256000,
+                        "maxTokens": 8192
+                    }
+                ]
             }
         }
     },
     "agents": {
         "defaults": {
             "model": {
-                "primary": "google/gemini-2.0-flash",
+                "primary": "anthropic/claude-sonnet-4-5",
                 "fallbacks": [
                     "anthropic/claude-3-opus-20240229"
                 ]
@@ -68,6 +81,9 @@
                     "params": {
                         "cacheControlTtl": "1h"
                     }
+                },
+                "moonshot/kimi-k2-0905-preview": {
+                    "alias": "kimi"
                 }
             },
             "contextPruning": {
@@ -119,9 +135,7 @@
         "trustedProxies": [
             "127.0.0.1",
             "::1",
-            "100.0.0.0/8",
-            "0.0.0.0/0",
-            "::/0"
+            "100.0.0.0/8"
         ]
     },
     "skills": {
@@ -130,7 +144,8 @@
     "plugins": {
         "load": {
             "paths": [
-                "/home/node/.clawdbot/skills"
+                "/home/node/.clawdbot/skills",
+                "/home/node/clawd/extensions"
             ]
         },
         "slots": {},
@@ -138,10 +153,21 @@
             "telegram": {
                 "enabled": true
             },
+            "gmail": {
+                "enabled": true,
+                "config": {
+                    "account": "joemartinbtc21@gmail.com",
+                    "appPassword": "${GMAIL_APP_PASSWORD}",
+                    "whitelist": [
+                        "jg@storymaster.de"
+                    ],
+                    "autoApprove": false
+                }
+            },
             "clawdbot-supermemory": {
                 "enabled": true,
                 "config": {
-                    "apiKey": "sm_7NwhbzrPmbG9Ld1CviT5JN_brrDxguhykqsHENzqHOqgQBpCcMCrMycypXsQcrgRakWwDOgyxYQLzIMZGitlgBU"
+                    "apiKey": "${SUPERMEMORY_API_KEY}"
                 }
             },
             "memory-core": {
@@ -149,17 +175,6 @@
             },
             "memory-lancedb": {
                 "enabled": true
-            },
-            "gmail": {
-                "enabled": true,
-                "config": {
-                    "account": "joemartinbtc21@gmail.com",
-                    "appPassword": "dimy lblv xmsp pdlo",
-                    "whitelist": [
-                        "jg@storymaster.de"
-                    ],
-                    "autoApprove": false
-                }
             }
         },
         "installs": {
