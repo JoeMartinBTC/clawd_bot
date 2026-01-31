@@ -21,9 +21,9 @@ The system uses a hybrid configuration layout. **Do not modify blindly.**
 | `Gmail Credentials` | `moltbot.json` (inside container/volume) | Hardcoded in JSON config (`joemartinbtc21`). |
 
 **File Locations on Host:**
-- **Docker Compose:** `/root/moltbot/docker-compose.yml`
-- **Environment File:** `/root/moltbot/.env`
-- **Config JSON:** `/root/.clawdbot/moltbot.json` (Bind-mounted to `/home/node/.clawdbot/moltbot.json`)
+- **Docker Compose:** `/root/moltbot/docker-compose.yml` (Maps ENV)
+- **Environment File:** `/root/moltbot/.env` (TRUSTED SOURCE OF TRUTH)
+- **Config JSON:** `/root/.clawdbot/moltbot.json` (Uses placeholders `${VAR}`)
 
 ## 3. Configuration Management (HOW-TO)
 
