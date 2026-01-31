@@ -5,9 +5,18 @@
 
 ## 1. System Overview
 - **Host:** Hetzner Dedicated Server (IP: `46.62.133.89`)
-- **User:** `root` (Docker Host), `nexus` (User Space)
+- **Version:** v2026.1.30 (Security Hardened)
 - **Deployment Method:** Docker Compose
 - **Service Name:** `moltbot` (Container: `moltbot-moltbot-gateway-1`)
+
+## Changelog
+### v2026.1.30 (2026-01-31)
+- **Feature:** Added Moonshot AI (Kimi) support (`kimi-k2-0905-preview`).
+- **Security:**
+    - Removed `moltbot_recovery.json` (Legacy Artifact).
+    - Migrated all API Keys to `.env` (Zero-Trust Config).
+    - Restricted `trustedProxies` to Localhost/Tailscale.
+    - Verified "Clean" status via Open Code Audit (see `SECURITY_AUDIT_2026-01-31.md`).
 
 ## 2. Environment Variables & Keys
 The system uses a hybrid configuration layout. **Do not modify blindly.**
