@@ -85,6 +85,23 @@ If `agents.defaults.models` is present in `moltbot.json` (which it is), the bot 
 - [ ] **Allowlist:** Add `"moonshot/kimi-k2-0905-preview": {}` to `agents.defaults.models` in `moltbot.json`.
 - [ ] **Restart:** `cd /root/moltbot && docker compose up -d` (Recreates container to load ENV).
 
+## 8. Security Architecture (Hardened)
+
+> [!CAUTION]
+> **NEVER** create files named `*_recovery.json` containing real secrets.
+> **NEVER** set `trustedProxies` to `0.0.0.0/0`.
+
+The system now operates in **Strict Security Mode**:
+
+1.  **Zero-Trust Config:** The configuration file `moltbot.json` contains **NO secrets**. It uses `${ENV_VAR}` exclusively.
+2.  **Environment Isolation:** Secrets live ONLY in `.env` (root-protected).
+3.  **Network Lockdown:**
+    *   **Allowed:** `127.0.0.1` (Localhost), `10.0.0.0/8` (Tailscale/Private), `::1`.
+    *   **Blocked:** Public Internet (`0.0.0.0/0`).
+4.  **Audit Compliance:**
+    *   The repository is "Clean" (Open Code Verified).
+    *   Any checking of hardcoded keys effectively fails the build policy.
+
 ---
 **Maintainer Note:**
 Always respect **First Principles**. Do not assume previous state. Verify file existence before editing. Verify uptime (>10s) after restarting.

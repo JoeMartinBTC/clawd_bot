@@ -156,7 +156,7 @@
             "gmail": {
                 "enabled": true,
                 "config": {
-                    "account": "joemartinbtc21@gmail.com",
+                    "account": "${GMAIL_ACCOUNT}",
                     "appPassword": "${GMAIL_APP_PASSWORD}",
                     "whitelist": [
                         "jg@storymaster.de"
