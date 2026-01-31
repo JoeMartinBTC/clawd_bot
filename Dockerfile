@@ -33,7 +33,8 @@ COPY ui/package.json ./ui/package.json
 COPY patches ./patches
 COPY scripts ./scripts
 
-RUN rm -f pnpm-lock.yaml && pnpm install && pnpm add nodemailer -w
+# MERGED SECTION: Fix pnpm version (local fix) AND add nodemailer (upstream update)
+RUN npm install -g --force pnpm@10.23.0 && rm -f pnpm-lock.yaml && pnpm install && pnpm add nodemailer -w
 
 COPY . .
 RUN CLAWDBOT_A2UI_SKIP_MISSING=1 pnpm build

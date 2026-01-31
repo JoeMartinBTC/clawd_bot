@@ -1,6 +1,6 @@
 services:
   moltbot-gateway:
-    image: ${CLAWDBOT_IMAGE:-moltbot:local}
+    image: \moltbot:local
     build:
       context: .
       args:
@@ -8,56 +8,42 @@ services:
     environment:
       HOME: /home/node
       TERM: xterm-256color
-      CLAWDBOT_GATEWAY_TOKEN: ${CLAWDBOT_GATEWAY_TOKEN}
-      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
-      CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
-      CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
-      GOOGLE_API_KEY: ${GEMINI_API_KEY}
-      MOONSHOT_API_KEY: ${MOONSHOT_API_KEY}
-      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD}
-      GMAIL_ACCOUNT: ${GMAIL_ACCOUNT}
-      SUPERMEMORY_API_KEY: ${SUPERMEMORY_API_KEY}
-    volumes:
-      - ${CLAWDBOT_CONFIG_DIR}:/home/node/.clawdbot
-      - ${CLAWDBOT_WORKSPACE_DIR}:/home/node/clawd
+      CLAWDBOT_GATEWAY_TOKEN:       CLAUDE_AI_SESSION_KEY:       CLAUDE_WEB_SESSION_KEY:       CLAUDE_WEB_COOKIE:       TELEGRAM_BOT_TOKEN:       ANTHROPIC_API_KEY:       GEMINI_API_KEY:       GOOGLE_API_KEY:       MOONSHOT_API_KEY:       GMAIL_APP_PASSWORD:       GMAIL_ACCOUNT:       SUPERMEMORY_API_KEY:     volumes:
+      - \:/home/node/.clawdbot
+      - \:/home/node/clawd
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "127.0.0.1:${CLAWDBOT_GATEWAY_PORT:-18789}:18789"
-      - "127.0.0.1:${CLAWDBOT_BRIDGE_PORT:-18790}:18790"
+      - "127.0.0.1:\18789:18789"
+      - "127.0.0.1:\18790:18790"
     init: true
     network_mode: host
     restart: unless-stopped
     user: "root"
-    command: [ "node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789" ]
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--bind",
+        "lan",
+        "--port",
+        "18789"
+      ]
 
   moltbot-cli:
-    image: ${CLAWDBOT_IMAGE:-moltbot:local}
+    image: \moltbot:local
     build:
       context: .
     environment:
       HOME: /home/node
       TERM: xterm-256color
       BROWSER: echo
-      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
-      CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
-      CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
-      GOOGLE_API_KEY: ${GEMINI_API_KEY}
-      MOONSHOT_API_KEY: ${MOONSHOT_API_KEY}
-      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD}
-      GMAIL_ACCOUNT: ${GMAIL_ACCOUNT}
-      SUPERMEMORY_API_KEY: ${SUPERMEMORY_API_KEY}
-    volumes:
-      - ${CLAWDBOT_CONFIG_DIR}:/home/node/.clawdbot
-      - ${CLAWDBOT_WORKSPACE_DIR}:/home/node/clawd
+      CLAUDE_AI_SESSION_KEY:       CLAUDE_WEB_SESSION_KEY:       CLAUDE_WEB_COOKIE:       TELEGRAM_BOT_TOKEN:       ANTHROPIC_API_KEY:       GEMINI_API_KEY:       GOOGLE_API_KEY:       MOONSHOT_API_KEY:       GMAIL_APP_PASSWORD:       GMAIL_ACCOUNT:       SUPERMEMORY_API_KEY:     volumes:
+      - \:/home/node/.clawdbot
+      - \:/home/node/clawd
       - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
     tty: true
     init: true
     user: "root"
-    entrypoint: [ "node", "dist/index.js" ]
+    entrypoint: ["node", "dist/index.js"]
